@@ -39,6 +39,9 @@ The client constructor accepts an associative array of options:
     relative URI using the rules described in
     `RFC 3986, section 5.2 <https://tools.ietf.org/html/rfc3986#section-5.2>`_.
 
+    You can forbid the combination of base and relative uri with the
+    ``pin_base_uri`` option in case you want to.
+
     .. code-block:: php
 
         // Create a client with a base URI
@@ -186,7 +189,7 @@ requests.
     // Wait for the requests to complete; throws a ConnectException
     // if any of the requests fail
     $responses = Promise\Utils::unwrap($promises);
-    
+
     // You can access each response using the key of the promise
     echo $responses['image']->getHeader('Content-Length')[0];
     echo $responses['png']->getHeader('Content-Length')[0];

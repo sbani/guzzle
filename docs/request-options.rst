@@ -578,6 +578,35 @@ IDNA_* constants (except IDNA_ERROR_*), see ``$options`` parameter in
 documentation for more details.
 
 
+pin_base_uri
+--------------
+
+:Summary: Allow requests to the configured ``base_uri`` only if set.
+:Types:
+    - bool
+:Default: ``false``
+:Constant: ``GuzzleHttp\RequestOptions::PIN_BASE_URI``
+
+.. code-block:: php
+
+    $client = new Client(['base_uri' => 'https://foo.com']);
+    $client->request('GET', 'https://bar.com');
+    // The request is going to https://bar.com
+
+    $client = new Client(['base_uri' => 'https://foo.com', 'pin_base_uri' => true]);
+    $client->request('GET', 'https://bar.com');
+    // Will lead to a InvalidArgumentException because we allow
+
+    $client = new Client(['base_uri' => 'https://foo.com', 'pin_base_uri' => true]);
+    $client->request('GET', 'ftps://foo.com');
+    // Will lead to a InvalidArgumentException because we allow
+
+Enables/disables IDN support, can also be used for precise control by combining
+IDNA_* constants (except IDNA_ERROR_*), see ``$options`` parameter in
+`idn_to_ascii() <https://www.php.net/manual/en/function.idn-to-ascii.php>`_
+documentation for more details.
+
+
 json
 ----
 

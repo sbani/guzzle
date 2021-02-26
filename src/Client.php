@@ -210,6 +210,10 @@ class Client implements ClientInterface, \Psr\Http\Client\ClientInterface
     private function buildUri(UriInterface $uri, array $config): UriInterface
     {
         if (isset($config['base_uri'])) {
+            if ($config['pin_base_uri'] && $uri->getScheme()  !== '' && strpos((string)$uri, $config['base_uri']) !== 0) {
+                throw new InvalidArgumentException('Trying to bypass pinned base_uri');
+            }
+
             $uri = Psr7\UriResolver::resolve(Psr7\Utils::uriFor($config['base_uri']), $uri);
         }
 
@@ -233,6 +237,7 @@ class Client implements ClientInterface, \Psr\Http\Client\ClientInterface
             'verify'          => true,
             'cookies'         => false,
             'idn_conversion'  => false,
+            'pin_base_uri'    => true,
         ];
 
         // Use the standard Linux HTTP_PROXY and HTTPS_PROXY if set.

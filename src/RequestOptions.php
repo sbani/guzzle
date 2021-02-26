@@ -142,6 +142,12 @@ final class RequestOptions
     public const IDN_CONVERSION = 'idn_conversion';
 
     /**
+     * pin_base_uri: (bool, default=false) Set to false to allow relative URIs
+     * only when merging with the given base_uri.
+     */
+    public const PIN_BASE_URI = 'pin_base_uri';
+
+    /**
      * json: (mixed) Adds JSON data to a request. The provided value is JSON
      * encoded and a Content-Type header of application/json will be added to
      * the request if no Content-Type header is already present.

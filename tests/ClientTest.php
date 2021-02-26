@@ -820,4 +820,46 @@ class ClientTest extends TestCase
         self::assertSame('https://xn--d1acpjx3f.xn--p1ai/images', (string) $request->getUri());
         self::assertSame('xn--d1acpjx3f.xn--p1ai', (string) $request->getHeaderLine('Host'));
     }
+
+    public function testPinBaseUriWithSameHost()
+    {
+        $mock = new MockHandler([new Response()]);
+        $client = new Client([
+            'base_uri' => 'https://foo.com/bar',
+            'pin_base_uri' => true,
+            'handler'  => $mock
+        ]);
+
+        $request = new Request('GET', 'https://foo.com/something');
+        $client->send($request);
+        self::assertSame('https://foo.com/something', (string) $request->getUri());
+    }
+
+    public function testPinBaseUriDifferentHost()
+    {
+        $mock = new MockHandler([new Response()]);
+        $client = new Client([
+            'base_uri' => 'https://foo.com/bar',
+            'pin_base_uri' => true,
+            'handler'  => $mock
+        ]);
+
+        $this->expectException(\GuzzleHttp\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Trying to bypass pinned base_uri');
+        $client->get('https://baz.tld/something');
+    }
+
+    public function testPinBaseUriDifferentScheme()
+    {
+        $mock = new MockHandler([new Response()]);
+        $client = new Client([
+            'base_uri' => 'https://foo.com/bar',
+            'pin_base_uri' => true,
+            'handler'  => $mock
+        ]);
+
+        $this->expectException(\GuzzleHttp\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Trying to bypass pinned base_uri');
+        $client->get('ftps://foo.com/bar');
+    }
 }
